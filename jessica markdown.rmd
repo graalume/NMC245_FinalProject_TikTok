@@ -1,0 +1,23 @@
+---
+title: "Jessica Tik Tok Markdown"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+
+total_trends <- read_csv("total_trends.csv")
+```
+
+## Username Verification with View, Comments, and Shares 
+
+Here is a graph that shows the correlation between a Tik Tok creators username and their video play count. This graph also combines data that shows each videos comment and share count for each of those videos, based off the size and color of each data point. The shape of each plotted point reference if that particular Tik Tok creator is verified or not within the app. 
+
+```{r cars}
+ggplot(total_trends, aes(author_nickname, stats_playCount, colour=stats_shareCount, size=stats_commentCount, shape=author_verified))+geom_jitter()+xlab("Creator Nickname")+ylab("Video Play Count")+scale_colour_continuous(name="Share Count")+scale_size_continuous(name="Comment Count")+scale_shape_discrete(name="Author Verification")
+
+```
+
