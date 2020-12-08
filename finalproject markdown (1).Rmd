@@ -1,0 +1,35 @@
+---
+title: "Final Project"
+author: "ElseLucia"
+date: "12/8/2020"
+output: flexdashboard::flex_dashboard
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(dplyr)
+library(readr)
+```
+
+## Will they Actually Like & Share?
+The graphs below show the correlation between how many views a TikTok got with how many likes and shares it also got. In theory, for someone to get the most viral they can is not just about views, the video also needs likes and shares. Using this graph we can analyze if a video with a lot of views also has a lot of likes and shares. If there are outliers in this pattern we would want to look into why that video got popular without the three ingredients that normally are needed to go viral. The first graph shows all of our data points, the graph tells us that there are very few videos that get a high number of Views, Likes, and Shares. The second graph zooms in and excludes those large outliers. This is useful to observe the most common combination of Views, Likes, and Shares. The last graph shows just the outliers. This is helpful because we can study what the best combination is for maximum viral potential.    
+
+
+```{r,echo=FALSE}
+
+total_trends <- read_csv("total_trends.csv")
+  ggplot(total_trends,aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("If they see it will they like & share?")+xlab("Views")+ylab("Likes")+scale_colour_continuous(name = "Shares")
+total_trends%>%
+  filter(stats_playCount<10000000)%>%
+  ggplot(aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("Will they like & share?","Minus outliers")+xlab("Views")+ylab("Likes")+scale_colour_continuous(name = "Shares")
+total_trends%>%
+  filter(stats_playCount>10000000)%>%
+    ggplot(aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("Will they like & share?","Only outliers")+xlab("Views")+ylab("Likes")+scale_colour_continuous(name = "Shares")
+
+```
+
+
