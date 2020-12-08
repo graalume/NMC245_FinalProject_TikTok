@@ -2,7 +2,11 @@
 title: "FinalProject_NMC245"
 author: "Bailey, Cade, ElseLucia, Felix, Libby,"
 date: "12/3/2020"
-output: html_document
+output:
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    css: "style.css"
 ---
 
 ```{r setup, include=FALSE}
@@ -20,7 +24,7 @@ total_trends <- read_csv("total_trends.csv")
 by Jessic Lucas
 Here is a graph that shows the correlation between a Tik Tok creators username and their video play count. This graph also combines data that shows each videos comment and share count for each of those videos, based off the size and color of each data point. The shape of each plotted point reference if that particular Tik Tok creator is verified or not within the app. This graph shows what you would predict within the Tik Tok community, that the more views a video gets, the more shares and comments it will get as well. Most videos that make it to such a high view count are from verified creators, however there were a larger number of outliers of unverified users than one would expect. 
 
-```{r cars}
+```{r views}
 ggplot(total_trends, aes(author_nickname, stats_playCount, colour=stats_shareCount, size=stats_commentCount, shape=author_verified))+geom_jitter()+xlab("Creator Nickname")+ylab("Video Play Count")+scale_colour_continuous(name="Share Count")+scale_size_continuous(name="Comment Count")+scale_shape_discrete(name="Author Verification")
 
 ```
@@ -29,7 +33,7 @@ ggplot(total_trends, aes(author_nickname, stats_playCount, colour=stats_shareCou
 
 by Bailey Breving
 
-```{r}
+```{r duration}
 ggplot(total_trends, aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
   ggtitle("Video Duration vs. Video Likes")+theme(plot.title = element_text(hjust = 0.5))+
   scale_colour_discrete(name = "Verified User Status", labels = c("Non-Verified", "Verified"))
@@ -38,7 +42,7 @@ ggplot(total_trends, aes(video_duration, authorStats_diggCount, colour=author_ve
 There is a trend in video likes declining the longer the TikTok video duration. There is no correlation between user popularity and verified user status. Shorter videos receive more likes than longer videos.
 
 
-```{r cars}
+```{r duration2}
 library(dplyr)
 library(ggplot2)
 total_trends%>%
@@ -52,4 +56,12 @@ total_trends%>%
 
 Taking a closer look: There is a strong correlation between shorter videos ranging between 10-20 seconds that receive the majority of likes. Interestingly enough, the “Verified Users” seem to plateau in their video likes no matter the duration of their TikTok videos. 
 
-## 
+## Correlation between number of likes and verified users vs unverified
+
+by Cade Thomas
+This graph compares the number of likes on the posts of Verified users and Unverified users. As it turns out, there are larger more isolated instances of verified users getting a lot of likes. And for the unverified users they don't have a lot of likes but they do have a very high volume of likes. This shows that unverified users getting lucky on Tik Tok reach more viewers than some of the verified users.
+```{r verified}
+ggplot(total_trends, aes(author_verified,stats_diggCount,color=stats_diggCount)) + geom_jitter()+scale_colour_continuous(name = "# of Likes")+labs(title="Verified users and unverified users VS Likes", x="Author", y="Likes")
+```
+
+
