@@ -1,0 +1,39 @@
+---
+title: "Correlation between video duration vs. video likes"
+date: 8 Dec 2020
+Name: Bailey Breving
+output: flexdashboard::flex_dashboard
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(readr)
+total_trends <- read_csv("/home/brevingb/Cultural20/unit_three/total_trends.csv")
+```
+```{r}
+
+ggplot(total_trends, aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
+  ggtitle("Video Duration vs. Video Likes")+theme(plot.title = element_text(hjust = 0.5))+
+  scale_colour_discrete(name = "Verified User Status", labels = c("Non-Verified", "Verified"))
+
+```
+
+There is a trend in video likes declining the longer the TikTok video duration. There is no correlation between user popularity and verified user status. Shorter videos receive more likes than longer videos.
+
+
+```{r cars}
+library(dplyr)
+library(ggplot2)
+total_trends%>%
+  filter(authorStats_diggCount < 5000)%>%
+  ggplot(aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
+  ggtitle("Video Duration vs. Video Likes")+theme(plot.title = element_text(hjust = 0.5))+
+  scale_colour_discrete(name = "Verified User Status", labels = c("Non-Verified", "Verified"))
+  
+  
+```
+
+Taking a closer look: There is a strong correlation between shorter videos ranging between 10-20 seconds that receive the majority of likes. Interestingly enough, the “Verified Users” seem to plateau in their video likes no matter the duration of their TikTok videos. 
+
