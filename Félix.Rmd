@@ -1,0 +1,47 @@
+---
+title: "FinalProject"
+author: "ElseLucia"
+date: "12/3/2020"
+output: html_document
+---
+For this work, I decided to do the correlation between the content duration and the share count. This proves that the videos that share the most last between 0 to 20 seconds even though there isn't much share. Adding the likes per video help me see that people would prefer to like content instead of sharing it.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(readr)
+library(dplyr, lib.loc = "/opt/conda/lib/R/library")
+total_trends <- read_csv("total_trends.csv")
+legend_title <- "OMG My Title"
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+total_trends%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+total_trends%>%
+filter(video_duration<20)%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes <20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+total_trends%>%
+filter(video_duration>20)%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes >20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
