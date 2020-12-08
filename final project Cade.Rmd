@@ -1,0 +1,28 @@
+---
+title: "Final project Cade"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(readr)
+knitr::opts_chunk$set(fig.width = 6, fig.asp = 1/2)
+
+
+total_trends <- read_csv("total_trends.csv")
+```
+
+This graph compares the number of likes on the posts of Verified users and Unverified users. As it turns out, there are larger more isolated instances of verified users getting a lot of likes. And for the unverified users they don't have a lot of likes but they do have a very high volume of likes. This shows that unverified users getting lucky on Tik Tok reach more viewers than some of the verified users.
+```{r cars}
+ggplot(total_trends, aes(author_verified,stats_diggCount,color=stats_diggCount)) + geom_jitter()+scale_colour_continuous(name = "# of Likes")+labs(title="Verified users and unverified users VS Likes", x="Author", y="Likes")
+```
+
+
+
+```{r pressure, echo=FALSE}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
