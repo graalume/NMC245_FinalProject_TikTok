@@ -64,4 +64,20 @@ This graph compares the number of likes on the posts of Verified users and Unver
 ggplot(total_trends, aes(author_verified,stats_diggCount,color=stats_diggCount)) + geom_jitter()+scale_colour_continuous(name = "# of Likes")+labs(title="Verified users and unverified users VS Likes", x="Author", y="Likes")
 ```
 
+# Felix
+
+```{r felix}
+total_trends%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+total_trends%>%
+filter(video_duration<20)%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes <20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+total_trends%>%
+filter(video_duration>20)%>%
+  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
+  ggtitle("Correlation between video duration and share count by their amount of likes >20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+
+```
 
