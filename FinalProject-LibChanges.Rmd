@@ -1,83 +1,148 @@
 ---
-title: "FinalProject_NMC245"
-author: "Bailey, Cade, ElseLucia, Felix, Libby,"
-date: "12/3/2020"
+title: "DISSECTING TIKTOK"
 output:
-  flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
-    css: "style.css"
+  html_document:
+    theme: null
+    highlight: null
+    css: style.css
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 library(readr)
+library(prettydoc)
+library(wesanderson)
 
 total_trends <- read_csv("total_trends.csv")
+total_trends_ID <- read_csv("total_trends_ID.csv")
+```
+
+####Created by<br>Bailey Breving, Cade Thomas, ElseLucia Knudsen, Felix Varas, Jessica Lucas, & Libby Graalum<br><br>
+
+
+## Will they Actually Like & Share?
+
+##### by ElseLucia Knudsen
+
+The graphs below show the correlation between how many views a TikTok got with how many likes and shares it also got. In theory, for someone to get the most viral they can is not just about views, the video also needs likes and shares. Using this graph we can analyze if a video with a lot of views also has a lot of likes and shares. If there are outliers in this pattern we would want to look into why that video got popular without the three ingredients that normally are needed to go viral. The first graph shows all of our data points, the graph tells us that there are very few videos that get a high number of Views, Likes, and Shares. The second graph zooms in and excludes those large outliers. This is useful to observe the most common combination of Views, Likes, and Shares. The last graph shows just the outliers. This is helpful because we can study what the best combination is for maximum viral potential.    
+
+### If They See It, Will They Like & Share?
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align="center"}
+total_trends <- read_csv("total_trends.csv")
+  ggplot(total_trends,aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("")+xlab("Views")+ylab("Likes")+scale_color_gradient(low="blue", high="hot pink", name = "Shares")
+```
+
+### Will They Like & Share? (Minus Outliers)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align="center"}
+total_trends%>%
+  filter(stats_playCount<10000000)%>%
+  ggplot(aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("")+xlab("Views")+ylab("Likes")+scale_color_gradient(low="blue", high="hot pink", name = "Shares")
+```
+
+### Will They Like & Share? (Only Outliers)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.align="center"}
+total_trends%>%
+  filter(stats_playCount>10000000)%>%
+    ggplot(aes(stats_playCount, stats_diggCount, colour=stats_shareCount))+geom_point()+
+  ggtitle("")+xlab("Views")+ylab("Likes")+scale_color_gradient(low="blue", high="hot pink", name = "Shares")
+
+```
+
+## Correlation Between the Number of Likes a Video Has and Whether Or Not It Was Posted by a Verified User
+##### by Cade Thomas
+
+This graph compares the number of likes on the posts of Verified users and Unverified users. As it turns out, there are larger more isolated instances of verified users getting a lot of likes. And for the unverified users they don't have a lot of likes but they do have a very high volume of likes. This shows that unverified users getting lucky on Tik Tok reach more viewers than some of the verified users.
+
+```{r verified, echo=FALSE, fig.align="center"}
+ggplot(total_trends, aes(author_verified,stats_diggCount,color=stats_diggCount)) + geom_jitter()+scale_color_gradient(low="blue", high="hot pink", name = "# of Likes")+labs(title="", x="Author", y="Likes")
 ```
 
 
-## Username Verification with View, Comments, and Shares 
+## Correlation Between Video Duration and Video Likes
 
-by Jessic Lucas
-Here is a graph that shows the correlation between a Tik Tok creators username and their video play count. This graph also combines data that shows each videos comment and share count for each of those videos, based off the size and color of each data point. The shape of each plotted point reference if that particular Tik Tok creator is verified or not within the app. This graph shows what you would predict within the Tik Tok community, that the more views a video gets, the more shares and comments it will get as well. Most videos that make it to such a high view count are from verified creators, however there were a larger number of outliers of unverified users than one would expect. 
-
-```{r views}
-ggplot(total_trends, aes(author_nickname, stats_playCount, colour=stats_shareCount, size=stats_commentCount, shape=author_verified))+geom_jitter()+xlab("Creator Nickname")+ylab("Video Play Count")+scale_colour_continuous(name="Share Count")+scale_size_continuous(name="Comment Count")+scale_shape_discrete(name="Author Verification")
-
-```
-
-## Correlatino between Video Duration and Video Likes
-
-by Bailey Breving
-
-```{r duration}
-ggplot(total_trends, aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
-  ggtitle("Video Duration vs. Video Likes")+theme(plot.title = element_text(hjust = 0.5))+
-  scale_colour_discrete(name = "Verified User Status", labels = c("Non-Verified", "Verified"))
-```
+##### by Bailey Breving
 
 There is a trend in video likes declining the longer the TikTok video duration. There is no correlation between user popularity and verified user status. Shorter videos receive more likes than longer videos.
 
+### Video Duration vs. Video Likes
 
-```{r duration2}
-library(dplyr)
-library(ggplot2)
+```{r duration, echo=FALSE, fig.align="center"}
+ggplot(total_trends, aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
+  ggtitle("")+theme(plot.title = element_text(hjust = 0.5))+
+  scale_colour_manual(values=c("blue", "hot pink"), name = "Verified User Status", labels = c("Non-Verified", "Verified"))
+```
+
+<br>Taking a closer look: There is a strong correlation between shorter videos ranging between 10-20 seconds that receive the majority of likes. Interestingly enough, the “Verified Users” seem to plateau in their video likes no matter the duration of their TikTok videos. 
+
+### Video Duration vs. Video Likes
+
+```{r duration2, echo=FALSE, fig.align="center"}
 total_trends%>%
   filter(authorStats_diggCount < 5000)%>%
   ggplot(aes(video_duration, authorStats_diggCount, colour=author_verified))+geom_jitter()+xlab("Video Duration")+ylab("Video Likes")+
-  ggtitle("Video Duration vs. Video Likes")+theme(plot.title = element_text(hjust = 0.5))+
-  scale_colour_discrete(name = "Verified User Status", labels = c("Non-Verified", "Verified"))
-  
-  
+  ggtitle("")+theme(plot.title = element_text(hjust = 0.5))+
+  scale_colour_manual(values=c("blue", "hot pink"), name = "Verified User Status", labels = c("Non-Verified", "Verified"))
 ```
 
-Taking a closer look: There is a strong correlation between shorter videos ranging between 10-20 seconds that receive the majority of likes. Interestingly enough, the “Verified Users” seem to plateau in their video likes no matter the duration of their TikTok videos. 
 
-## Correlation between number of likes and verified users vs unverified
 
-by Cade Thomas
-This graph compares the number of likes on the posts of Verified users and Unverified users. As it turns out, there are larger more isolated instances of verified users getting a lot of likes. And for the unverified users they don't have a lot of likes but they do have a very high volume of likes. This shows that unverified users getting lucky on Tik Tok reach more viewers than some of the verified users.
-```{r verified}
-ggplot(total_trends, aes(author_verified,stats_diggCount,color=stats_diggCount)) + geom_jitter()+scale_colour_continuous(name = "# of Likes")+labs(title="Verified users and unverified users VS Likes", x="Author", y="Likes")
-```
+## Correlation of Video Duration, Likes, & Shares
+##### by Felix Varas
 
-# Felix
+For this work, I decided to do the correlation between the content duration and the share count. This proves that the videos that share the most last between 0 to 20 seconds even though there isn't much share. Adding the likes per video help me see that people would prefer to like content instead of sharing it.
 
-```{r felix}
+### Correlation Between Video Duration and Share Count by Their Number of Likes
+
+```{r felix, echo=FALSE, fig.align="center"}
 total_trends%>%
-  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
-  ggtitle("Correlation between video duration and share count by their amount of likes")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+  ggplot(aes(video_duration, stats_shareCount, color=stats_diggCount))+geom_jitter()+
+  ggtitle("")+xlab("Video duration")+ylab("Share count")+scale_color_gradient(low="blue", high="hot pink", name = "Likes per video")
+```
+
+### Correlation Between Video Duration (videos under 20 sec.) and Share Count by Their Number of Likes
+
+```{r felix2, echo=FALSE, fig.align="center"}
 total_trends%>%
 filter(video_duration<20)%>%
-  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
-  ggtitle("Correlation between video duration and share count by their amount of likes <20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+  ggplot(aes(video_duration, stats_shareCount, color=stats_diggCount))+geom_jitter()+
+  ggtitle("")+xlab("Video duration")+ylab("Share count")+scale_color_gradient(low="blue", high="hot pink", name = "Likes per video")
+```
+
+### Correlation Between Video Duration (videos over 20 sec.) and Share Count by Their Number of Likes
+
+```{r felix3, echo=FALSE, fig.align="center"}
 total_trends%>%
 filter(video_duration>20)%>%
-  ggplot(aes(video_duration, stats_shareCount, color=authorStats_heart))+geom_jitter()+
-  ggtitle("Correlation between video duration and share count by their amount of likes >20")+xlab("Video duration")+ylab("Share count")+scale_colour_continuous(name = "Likes per video")
+  ggplot(aes(video_duration, stats_shareCount, color=stats_diggCount))+geom_jitter()+
+  ggtitle("")+xlab("Video duration")+ylab("Share count")+scale_color_gradient(low="blue", high="hot pink", name = "Likes per video")
 
 ```
 
+## Username Verification with View, Comments, and Shares 
+
+##### by Jessica Jucas
+
+Here is a graph that shows the correlation between a Tik Tok creator's username and their video play count. This graph also combines data that shows each video's comment and share count for each of those videos, based on the size and color of each data point. The shape of each plotted point reference if that particular Tik Tok creator is verified or not within the app. This graph shows what you would predict within the Tik Tok community, that the more views a video gets, the more shares and comments it will get as well. Most videos that make it to such a high view count are from verified creators, however, there were a larger number of outliers of unverified users than one would expect.  
+
+```{r, echo=FALSE, fig.align="center"}
+ggplot(total_trends_ID, aes(New_ID, stats_playCount, colour=stats_shareCount, size=stats_commentCount, shape=author_verified))+geom_jitter()+ ggtitle("")+xlab("Creator Nickname")+ylab("Video Play Count")+scale_color_gradient(low="blue", high="hot pink", name="Share Count")+scale_size_continuous(name="Comment Count")+scale_shape_discrete(name="Author Verification")
+
+```
+
+## Network of Words used in Descriptions
+
+##### by Libby Graalum
+
+This network consists of the corpus connections between words and hashtags used in the description of featured TikToks. As seen in the center, the hashtag "fyp" a.k.a. "for your page" has the high occurrences. The coloring of the nodes represents the modularities in the dataset.
+
+```{r out.width = "100%", echo = FALSE}
+knitr::include_graphics("DescriptionNetworkImages/Desc_Nwtwork.svg", error = FALSE)
+```
+
+<br><br><br><br><br>
